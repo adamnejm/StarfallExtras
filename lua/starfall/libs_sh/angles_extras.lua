@@ -41,7 +41,6 @@ end
 
 --- Normalizes the angle so that each component is constrained within -180..180 range
 -- Self-modifies
--- @return nil
 function ang_methods:normalize()
 	self[1] = (self[1] + 180) % 360 - 180
 	self[2] = (self[2] + 180) % 360 - 180
