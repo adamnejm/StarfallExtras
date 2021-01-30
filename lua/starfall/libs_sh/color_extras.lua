@@ -1,6 +1,35 @@
 
 local checkluatype = SF.CheckLuaType
 
+local tonumber = tonumber
+local string_sub = string.sub
+local hex_to_rgb = {
+	[3] = function(v) return {
+			tonumber("0x"..v[1])*17,
+			tonumber("0x"..v[2])*17,
+			tonumber("0x"..v[3])*17,
+			255
+		} end,
+	[4] = function(v) return {
+			tonumber("0x"..v[1])*17,
+			tonumber("0x"..v[2])*17,
+			tonumber("0x"..v[3])*17,
+			tonumber("0x"..v[4])*17
+		} end,
+	[6] = function(v) return {
+			tonumber("0x"..string_sub(v,1,2)),
+			tonumber("0x"..string_sub(v,3,4)),
+			tonumber("0x"..string_sub(v,5,6)),
+			255
+		} end,
+	[8] = function(v) return {
+			tonumber("0x"..string_sub(v,1,2)),
+			tonumber("0x"..string_sub(v,3,4)),
+			tonumber("0x"..string_sub(v,5,6)),
+			tonumber("0x"..string_sub(v,7,8))
+		} end,
+}
+
 return function(instance)
 
 local color_methods, color_meta, cwrap, unwrap = instance.Types.Color.Methods, instance.Types.Color, instance.Types.Color.Wrap, instance.Types.Color.Unwrap
@@ -9,6 +38,34 @@ local function wrap(tbl)
 end
 
 -- -------------------------------------------
+
+--- Creates a table struct that resembles a Color
+-- @name builtins_library.Color
+-- @class function
+-- @param r - Red or string hexadecimal color
+-- @param g - Green
+-- @param b - Blue
+-- @param a - Alpha
+-- @return New color
+local ORIGINAL_COLOR_CONSTRUCTOR = instance.env.Color
+function instance.env.Color(r, ...)
+	if type(r) == "string" then
+		if r[1] == "#" then r = string.sub(r, 2) end
+		
+		if string.match(r, "%X") then
+			SF.Throw("Invalid characters in hexadecimal color", 2)
+		else
+			local h2r = hex_to_rgb[#r]
+			if h2r then
+				return wrap(h2r(r))
+			else
+				SF.Throw("Invalid hexadecimal color length", 2)
+			end
+		end
+	else
+		return ORIGINAL_COLOR_CONSTRUCTOR(r, ...)
+	end
+end
 
 --- Creates a randomized Color
 -- @name builtins_library.ColorRand
