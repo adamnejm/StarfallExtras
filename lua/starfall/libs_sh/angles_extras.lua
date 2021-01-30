@@ -10,17 +10,20 @@ end
 
 -- -------------------------------------------
 
---- Randomizes the angle
+--- Randomizes the angle components
 -- Self-modifies
--- @param min Number lower limit of each component. Default = -180
--- @param max Number upper limit of each component. Default = 180
-function ang_methods:randomize(min, max, integers)
-	if min then checkluatype(min, TYPE_NUMBER) else min = -180 end
-	if max then checkluatype(max, TYPE_NUMBER) else max = 180 end
+-- @param min Number lower limit for each component. Default = -90 for pitch, -180 for yaw and roll
+-- @param max Number upper limit for each component. Default = 90 for pitch, 180 for yaw and roll
+function ang_methods:randomize(min, max)
+	if min ~= nil then checkluatype(min, TYPE_NUMBER) end
+	if max ~= nil then checkluatype(max, TYPE_NUMBER) end
 	
 	local rand = math.Rand
-	return wrap { rand(min, max), rand(min, max), rand(min, max) }
+	self[1] = rand(min or -90,  max or 90)
+	self[2] = rand(min or -180, max or 180)
+	self[3] = rand(min or -180, max or 180)
 end
+
 
 --- Normalizes the angle so that each component is constrained within -180..180 range
 -- Self-modifies
