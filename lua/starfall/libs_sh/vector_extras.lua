@@ -10,13 +10,27 @@ end
 
 -- -------------------------------------------
 
+--- Creates a randomized Vector
+-- @name builtins_library.VectorRand
+-- @class function
+-- @param min Number lower limit for each component. Default = -1
+-- @param max Number upper limit for each component. Default = 1
+-- @return Randomized vector
+function instance.env.VectorRand(min, max)
+	if min ~= nil then checkluatype(min, TYPE_NUMBER) else min = -1 end
+	if max ~= nil then checkluatype(max, TYPE_NUMBER) else max = 1 end
+	
+	local rand = math.Rand
+	return wrap { rand(min, max), rand(min, max), rand(min, max) }
+end
+
 --- Randomizes the vector components
 -- Self-modifies
 -- @param min Number lower limit for each component. Default = -1
 -- @param max Number upper limit for each component. Default = 1
 function vec_methods:randomize(min, max)
-	if min then checkluatype(min, TYPE_NUMBER) else min = -1 end
-	if max then checkluatype(max, TYPE_NUMBER) else max = 1 end
+	if min ~= nil then checkluatype(min, TYPE_NUMBER) else min = -1 end
+	if max ~= nil then checkluatype(max, TYPE_NUMBER) else max = 1 end
 	
 	local rand = math.Rand
 	self[1] = rand(min, max)
