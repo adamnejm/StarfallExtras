@@ -19,7 +19,9 @@ function vec_methods:randomize(min, max)
 	if max then checkluatype(max, TYPE_NUMBER) else max = 1 end
 	
 	local rand = math.Rand
-	return wrap { rand(min, max), rand(min, max), rand(min, max) }
+	self[1] = rand(min, max)
+	self[2] = rand(min, max)
+	self[3] = rand(min, max)
 end
 
 
