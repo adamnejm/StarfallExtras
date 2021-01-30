@@ -81,4 +81,16 @@ function instance.env.ColorRand(min, max, alpha)
 	return wrap { random(min, max), random(min, max), random(min, max), alpha and math.random(min, max) or 255 }
 end
 
+--- Returns a hexadecimal representation of the color
+-- @return String hexadecimal color
+function color_methods:getHex()
+	local tohex = bit.tohex
+	if self[4] == 255 then
+		return tohex(self[1], 2)..tohex(self[2], 2)..tohex(self[3], 2)
+	else
+		return tohex(self[1], 2)..tohex(self[2], 2)..tohex(self[3], 2)..tohex(self[4], 2)
+	end
+end
+
+
 end
